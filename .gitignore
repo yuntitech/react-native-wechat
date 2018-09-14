@@ -7,3 +7,4 @@ node_modules
 # ios
 ios/build
 /ios/RCTWeChat.xcodeproj/project.xcworkspace/xcuserdata
+/Example/ios/Example.xcodeproj/project.xcworkspace/xcuserdata
