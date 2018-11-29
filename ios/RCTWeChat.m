@@ -181,6 +181,9 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
 {
     NSString *type = aData[RCTWXShareType];
 
+    NSUInteger thumbnailImageMaxLength = 32 * 1024;
+    UIImage *compressedThumbnailImage = [self compressImage:aThumbImage toByte:thumbnailImageMaxLength];
+
     if ([type isEqualToString:RCTWXShareTypeText]) {
         NSString *text = aData[RCTWXShareDescription];
         [self shareToWeixinWithTextMessage:aScene Text:text callBack:callback];
@@ -207,7 +210,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                          Object:webpageObject
                                      MessageExt:messageExt
                                   MessageAction:messageAction
-                                     ThumbImage:aThumbImage
+                                     ThumbImage:compressedThumbnailImage
                                        MediaTag:mediaTagName
                                        callBack:callback];
 
@@ -224,7 +227,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                          Object:musicObject
                                      MessageExt:messageExt
                                   MessageAction:messageAction
-                                     ThumbImage:aThumbImage
+                                     ThumbImage:compressedThumbnailImage
                                        MediaTag:mediaTagName
                                        callBack:callback];
 
@@ -239,7 +242,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                          Object:videoObject
                                      MessageExt:messageExt
                                   MessageAction:messageAction
-                                     ThumbImage:aThumbImage
+                                     ThumbImage:compressedThumbnailImage
                                        MediaTag:mediaTagName
                                        callBack:callback];
 
@@ -261,7 +264,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                                  Object:imageObject
                                              MessageExt:messageExt
                                           MessageAction:messageAction
-                                             ThumbImage:aThumbImage
+                                             ThumbImage:compressedThumbnailImage
                                                MediaTag:mediaTagName
                                                callBack:callback];
                     
@@ -281,7 +284,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                                          Object:fileObject
                                      MessageExt:messageExt
                                   MessageAction:messageAction
-                                     ThumbImage:aThumbImage
+                                     ThumbImage:compressedThumbnailImage
                                        MediaTag:mediaTagName
                                        callBack:callback];
 
@@ -394,6 +397,47 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
 	        body[@"type"] = @"PayReq.Resp";
 	        [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
     	}
+}
+
+#pragma mark - util
+
+- (UIImage *)compressImage:(UIImage *)image toByte:(NSUInteger)maxLength {
+  // Compress by quality
+  CGFloat compression = 1;
+  NSData *data = UIImageJPEGRepresentation(image, compression);
+  if (data.length < maxLength) return image;
+
+  CGFloat max = 1;
+  CGFloat min = 0;
+  for (int i = 0; i < 6; ++i) {
+    compression = (max + min) / 2;
+    data = UIImageJPEGRepresentation(image, compression);
+    if (data.length < maxLength * 0.9) {
+      min = compression;
+    } else if (data.length > maxLength) {
+      max = compression;
+    } else {
+      break;
+    }
+  }
+  UIImage *resultImage = [UIImage imageWithData:data];
+  if (data.length < maxLength) return resultImage;
+
+  // Compress by size
+  NSUInteger lastDataLength = 0;
+  while (data.length > maxLength && data.length != lastDataLength) {
+    lastDataLength = data.length;
+    CGFloat ratio = (CGFloat)maxLength / data.length;
+    CGSize size = CGSizeMake((NSUInteger)(resultImage.size.width * sqrtf(ratio)),
+                             (NSUInteger)(resultImage.size.height * sqrtf(ratio))); // Use NSUInteger to prevent white blank
+    UIGraphicsBeginImageContext(size);
+    [resultImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    resultImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    data = UIImageJPEGRepresentation(resultImage, compression);
+  }
+
+  return resultImage;
 }
 
 @end
