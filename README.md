@@ -4,7 +4,7 @@
 
 [React Native] bridging library that integrates WeChat SDKs:
 
-- [x] iOS SDK 1.7.2
+- [x] iOS SDK 1.8.3
 - [x] Android SDK 221
 
 And [react-native-wechat] has the following tracking data in open source world:
@@ -304,6 +304,16 @@ Sends request for proceeding payment, then returns an object:
 |---------|--------|-------------------------------------|
 | errCode | Number | 0 if authorization successed        |
 | errStr  | String | Error message if any error occurred |
+
+#### launchMini(params)
+
+- `params` {Object} 打开小程序的参数
+
+  - `userName` {String} 拉起的小程序的username，填小程序的原始id
+
+  - `miniProgramType` {Integer} 拉起小程序的类型. 0-正式版 1-开发版 2-体验版
+
+  - `path` {String} 拉起小程序页面的可带参路径，不填默认拉起小程序首页
 
 ## Installation
 
