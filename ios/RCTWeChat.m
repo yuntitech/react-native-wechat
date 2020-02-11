@@ -60,17 +60,11 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_METHOD(registerApp:(NSString *)appid
+                  universalLink:(NSString *)universalLink
                   :(RCTResponseSenderBlock)callback)
 {
     self.appId = appid;
-    callback(@[[WXApi registerApp:appid] ? [NSNull null] : INVOKE_FAILED]);
-}
-
-RCT_EXPORT_METHOD(registerAppWithMTAEnabled:(NSString *)appid
-                  :(BOOL)mtaEnabled
-                  :(RCTResponseSenderBlock)callback)
-{
-  callback(@[[WXApi registerApp:appid enableMTA:mtaEnabled] ? [NSNull null] : INVOKE_FAILED]);
+    callback(@[[WXApi registerApp:appid universalLink:universalLink] ? [NSNull null] : INVOKE_FAILED]);
 }
 
 RCT_EXPORT_METHOD(isWXAppInstalled:(RCTResponseSenderBlock)callback)
