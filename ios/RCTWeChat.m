@@ -164,6 +164,8 @@ RCT_EXPORT_METHOD(shareToFavorite:(NSDictionary *)data
     [self shareToWeixinWithData:data scene:WXSceneFavorite callback:callback];
 }
 
+#ifdef BUILD_WITHOUT_PAY
+
 RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                   :(RCTResponseSenderBlock)callback)
 {
@@ -178,6 +180,8 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
         callback(@[success ? [NSNull null] : INVOKE_FAILED]);
     }];
 }
+
+#endif
 
 RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
                   :(RCTResponseSenderBlock)callback)
@@ -399,6 +403,8 @@ RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
     // TODO(Yorkie)
 }
 
+#ifdef BUILD_WITHOUT_PAY
+
 -(void) onResp:(BaseResp*)resp
 {
 	if([resp isKindOfClass:[SendMessageToWXResp class]]) {
@@ -444,6 +450,8 @@ RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
     }
 }
 
+#endif
+
 #pragma mark - util
 
 - (UIImage *)compressImage:(UIImage *)image toByte:(NSUInteger)maxLength {
@@ -486,3 +494,4 @@ RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
 }
 
 @end
+
