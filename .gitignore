@@ -12,3 +12,4 @@ ios/build
 .gradle
 /android/.project
 /android/.settings
+Example/yarn-error.log
