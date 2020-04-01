@@ -164,8 +164,6 @@ RCT_EXPORT_METHOD(shareToFavorite:(NSDictionary *)data
     [self shareToWeixinWithData:data scene:WXSceneFavorite callback:callback];
 }
 
-#ifdef BUILD_WITHOUT_PAY
-
 RCT_EXPORT_METHOD(pay:(NSDictionary *)data
                   :(RCTResponseSenderBlock)callback)
 {
@@ -180,8 +178,6 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
         callback(@[success ? [NSNull null] : INVOKE_FAILED]);
     }];
 }
-
-#endif
 
 RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
                   :(RCTResponseSenderBlock)callback)
@@ -432,9 +428,7 @@ RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
         else {
             [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
         }
-    }
-    #ifdef BUILD_WITHOUT_PAY
-    else if ([resp isKindOfClass:[PayResp class]]) {
+    } else if ([resp isKindOfClass:[PayResp class]]) {
         PayResp *r = (PayResp *)resp;
         NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
         body[@"errStr"] = r.errStr;
@@ -442,9 +436,7 @@ RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
         body[@"returnKey"] =r.returnKey;
         body[@"type"] = @"PayReq.Resp";
         [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
-    }
-    #endif
-    else if ([resp isKindOfClass:[WXLaunchMiniProgramResp class]]) {
+    } else if ([resp isKindOfClass:[WXLaunchMiniProgramResp class]]) {
         WXLaunchMiniProgramResp *r = (WXLaunchMiniProgramResp *)resp;
         NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
         body[@"errStr"] = r.errStr;
