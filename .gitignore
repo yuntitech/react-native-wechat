@@ -13,3 +13,5 @@ ios/build
 /android/.project
 /android/.settings
 Example/yarn-error.log
+
+.history
