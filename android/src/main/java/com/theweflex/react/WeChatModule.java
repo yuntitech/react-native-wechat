@@ -217,6 +217,21 @@ public class WeChatModule extends ReactContextBaseJavaModule implements IWXAPIEv
         callback.invoke(api.sendReq(payReq) ? null : INVOKE_FAILED);
     }
 
+    /**
+     * 打开微信客服
+     */
+    @ReactMethod
+    public void openWxCustomerService(String appid,String corpId,String kfId){
+        IWXAPI api = WXAPIFactory.createWXAPI(getReactApplicationContext(), appid);
+        // 判断当前版本是否支持拉起客服会话
+        if (api.getWXAppSupportAPI() >= Build.SUPPORT_OPEN_CUSTOMER_SERVICE_CHAT) {
+            WXOpenCustomerServiceChat.Req req = new WXOpenCustomerServiceChat.Req();
+            req.corpId = corpId;// 企业ID
+            req.url = String.format("https://work.weixin.qq.com/kfid/%s",kfId);	// 客服URL
+            api.sendReq(req);
+        }
+    }
+
     @ReactMethod
     public void launchMini(ReadableMap data, Callback callback) {
         if (api == null) {

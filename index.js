@@ -334,6 +334,16 @@ export function pay(data) {
 }
 
 /**
+ * 打开微信客服
+ * @param {String} appId 
+ * @param {String} corpId 
+ * @param {String} kfId 
+ */
+ export function openWxCustomerService (appId, corpId, kfId) {
+  WeChat.openWxCustomerService(appId, corpId, kfId);
+ };
+
+/**
  * promises will reject with this error when API call finish with an errCode other than zero.
  */
 export class WechatError extends Error {

@@ -179,6 +179,18 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     }];
 }
 
+// 打开微信客服
+RCT_EXPORT_METHOD(openWxCustomerService:(NSString *) appid
+                  corpid:(NSString *) corpid
+                  kfId:(NSString *) kfId) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    WXOpenCustomerServiceReq *req = [[WXOpenCustomerServiceReq alloc] init];
+    req.corpid = corpid ;  //企业ID
+    req.url = [NSString stringWithFormat:@"https://work.weixin.qq.com/kfid/%@", kfId];      //客服URL
+    [WXApi sendReq:req completion:nil];
+  });
+}
+
 RCT_EXPORT_METHOD(launchMini:(NSDictionary *)data
                   :(RCTResponseSenderBlock)callback)
 {
