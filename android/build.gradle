@@ -22,7 +22,7 @@ allprojects {
 }
 
 dependencies {
-  compile 'com.facebook.react:react-native:+'
-  compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-  compile 'androidx.annotation:annotation:1.1.0'
+  implementation 'com.facebook.react:react-native:+'
+  implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+  implementation 'androidx.annotation:annotation:1.1.0'
 }
